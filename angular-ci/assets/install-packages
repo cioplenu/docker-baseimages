@@ -1,0 +1,32 @@
+#!/bin/bash
+
+[ "$TRACE" == "true" ] && set -x
+set -e
+set -o pipefail
+
+# Path definitions
+TMPDIR=${TMPDIR:-/tmp}
+private_key_path=$TMPDIR/npm-git-private-key
+
+# Save key from params to file
+echo "${GIT_PRIVATE_KEY}" > $private_key_path
+
+chmod 0600 $private_key_path
+
+# Make sure ssh-agent runs and is killed when the script errors
+eval $(ssh-agent) >/dev/null 2>&1
+trap "kill $SSH_AGENT_PID" EXIT
+
+# Add the key to the agent and give it the custom askpass script
+SSH_ASKPASS=$(dirname $0)/askpass.sh DISPLAY= ssh-add $private_key_path >/dev/null
+
+# Setup custom ssh config
+mkdir -p ~/.ssh
+cat > ~/.ssh/config <<EOF
+StrictHostKeyChecking no
+LogLevel quiet
+EOF
+chmod 0600 ~/.ssh/config
+
+yarn install --frozen-lockfile --emoji true --network-timeout 100000
+
