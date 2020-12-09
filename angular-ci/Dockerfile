@@ -1,7 +1,4 @@
-FROM node:10.16-stretch
-
-LABEL maintainer="Anian Ziegler" \
-      email="it@cioplenu.de"
+FROM node:12-stretch
 
 RUN apt-get update                                                                                             \
     && apt-get install -y chromium git wget unzip jq                                                           \
