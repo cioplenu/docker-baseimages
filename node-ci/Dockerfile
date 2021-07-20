@@ -1,4 +1,4 @@
-FROM node:lts
+FROM node:16
 
 LABEL maintainer="Anian Ziegler" \
       email="it@cioplenu.de"
