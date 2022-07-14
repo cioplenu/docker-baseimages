@@ -1,4 +1,4 @@
-FROM node:12-stretch
+FROM node:16-bulseye
 
 RUN apt-get update                                                                                             \
     && apt-get install -y chromium git wget unzip jq                                                           \
